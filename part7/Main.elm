@@ -5,6 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (class, target, href, property, defaultValue)
 import Html.Events exposing (..)
 import Http
+import Http.Error exposing (..)
 import Json.Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (..)
 
@@ -38,7 +39,7 @@ searchFeed query =
         -- http://package.elm-lang.org/packages/elm-lang/http/latest/Http#send
         --
         -- HINT: request and HandleSearchResponse may be useful here.
-        Cmd.none
+        Http.send HandleSearchResponse request
 
 
 responseDecoder : Decoder (List SearchResult)
