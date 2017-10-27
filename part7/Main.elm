@@ -5,7 +5,6 @@ import Html exposing (..)
 import Html.Attributes exposing (class, target, href, property, defaultValue)
 import Html.Events exposing (..)
 import Http
-import Http.Error exposing (..)
 import Json.Decode exposing (Decoder)
 import Json.Decode.Pipeline exposing (..)
 
@@ -133,12 +132,14 @@ update msg model =
                 Err error ->
                     let message = 
                         case error of 
-                            Http.Error.BadUrl ->
+                            Http.BadUrl _ ->
                                 "Bad url given"
-                            Http.Error.Timeout ->
+                            Http.Timeout ->
                                 "Http Timeout occured"
-                            Http.Error.NetworkError -> 
+                            Http.NetworkError -> 
                                 "Network error occured"
+                            Http.BadPayload payloadError _ ->
+                                "Bad payload " ++ payloadError
                             _ -> 
                                 "Unexpected error occured"
                     in
