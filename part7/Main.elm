@@ -31,7 +31,8 @@ searchFeed query =
 
         -- HINT: responseDecoder may be useful here.
         request =
-            "TODO replace this String with a Request built using http://package.elm-lang.org/packages/elm-lang/http/latest/Http#get"
+            Http.get url responseDecoder
+            -- "TODO replace this String with a Request built using http://package.elm-lang.org/packages/elm-lang/http/latest/Http#get"
     in
         -- TODO replace this Cmd.none with a call to Http.send
         -- http://package.elm-lang.org/packages/elm-lang/http/latest/Http#send
@@ -129,6 +130,21 @@ update msg model =
                     ( { model | results = results }, Cmd.none )
 
                 Err error ->
+                    let message = 
+                        case error of 
+                            Http.Error.BadUrl ->
+                                "Bad url given"
+                            Http.Error.Timeout ->
+                                "Http Timeout occured"
+                            Http.Error.NetworkError -> 
+                                "Network error occured"
+                            _ -> 
+                                "Unexpected error occured"
+                    in
+                        ({ model | errorMessage = Just message}, Cmd.none)
+                        
+                    --case error of Http.Error.BadUrl
+                    --({ model | errorMessage = Just error }, Cmd.none )
                     -- TODO if decoding failed, store the message in model.errorMessage
                     --
                     -- HINT 1: Remember, model.errorMessage is a Maybe String - so it
@@ -139,7 +155,7 @@ update msg model =
                     --
                     -- Hint 3: to check if this is working, break responseDecoder
                     -- by changing "stargazers_count" to "description"
-                    ( model, Cmd.none )
+                    -- ( model, Cmd.none )
 
         SetQuery query ->
             ( { model | query = query }, Cmd.none )
