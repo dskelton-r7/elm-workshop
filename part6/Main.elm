@@ -26,9 +26,9 @@ searchResultDecoder =
     --
     -- TODO replace these calls to `hardcoded` with calls to `required`
     decode SearchResult
-        |> hardcoded 0
-        |> hardcoded ""
-        |> hardcoded 0
+        |> required "id" int
+        |> required "full_name" string
+        |> required "stargazers_count" int
 
 
 type alias Model =
@@ -60,6 +60,10 @@ responseDecoder =
 decodeResults : String -> List SearchResult
 decodeResults json =
     case decodeString responseDecoder json of
+        Ok results ->
+            results
+        Err errorMessage ->
+            []
         -- TODO add branches to this case-expression which return:
         --
         -- * the search results, if decoding succeeded
@@ -71,8 +75,6 @@ decodeResults json =
         --
         -- Ok (List SearchResult)
         -- Err String
-        _ ->
-            []
 
 
 view : Model -> Html Msg
